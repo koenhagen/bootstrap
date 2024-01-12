@@ -41,4 +41,4 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: npm run js-test
-          count: 5
+          count: 10
