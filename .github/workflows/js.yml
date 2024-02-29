@@ -2,24 +2,19 @@ name: JS Tests
 
 on:
   push:
-    branches:
-      - main
   pull_request:
   workflow_dispatch:
 
 env:
   FORCE_COLOR: 2
-  NODE: 18
+  NODE: 20
 
 permissions:
   contents: read
 
 jobs:
   run:
-    permissions:
-      # allow coverallsapp/github-action to create new checks issues and fetch code
-      checks: write
-      contents: read
+    permissions: write-all
     name: JS Tests
     runs-on: ubuntu-latest
 
@@ -30,7 +25,7 @@ jobs:
           persist-credentials: false
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE }}
           cache: npm
@@ -42,10 +37,8 @@ jobs:
         run: npm run js
 
       - name: Run JS tests
-        run: npm run js-test
-
-      - name: Run Coveralls
-        uses: coverallsapp/github-action@v2
+        uses: koenhagen/measure-energy-action@v0.20
         with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-          path-to-lcov: "./js/coverage/lcov.info"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: npm run js-test
+          count: 10
